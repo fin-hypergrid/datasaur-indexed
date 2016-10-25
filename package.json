@@ -1,0 +1,37 @@
+{
+  "name": "datasaur-indexed",
+  "version": "0.1.0",
+  "description": "Indexed datasaur module.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joneit/datasaur-indexed.git"
+  },
+  "author": "Steve Wirts, Jonathan Eiten",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/joneit/datasaur-indexed/issues"
+  },
+  "homepage": "https://github.com/joneit/datasaur-indexed#readme",
+  "dependencies": {
+    "extend-me": "^2.3",
+    "fin-hypergrid-data-source-base": "^0.4.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^3.0.1",
+    "gulp-exclude-gitignore": "^1.0.0",
+    "gulp-load-plugins": "^1.3.0",
+    "gulp-mirror": "^1.0.0",
+    "gulp-mocha": "^3.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
+    "gulp-uglify": "^2.0.0",
+    "gulp-util": "^3.0.7",
+    "multipipe": "^1.0.1",
+    "run-sequence": "^1.2.2"
+  }
+}
