@@ -61,7 +61,7 @@ function saurify() {
         ))
         .pipe($$.replace( // ...ending after modules.exports.
             /\w+\.exports(\s*=\s*)(\w+);/,
-            'window.datasaur.$2$1$2\n})();'
+            'window.' + name.replace('-', '.') + '$1$2;\n})();'
         ))
         .pipe(
             $$.mirror(
