@@ -1,3 +1,6 @@
+/* eslint-env commonjs, mocha */
+/* global object */
+
 var test = require('./util/test');
 var should = require('should'); // extends `Object` (!) with `.should`; creates `should()`
 
@@ -20,7 +23,7 @@ module.exports = function() {
             DATA_MAX = DATA.length - 1;
 
             dataSource = new DataSource(DATA);
-            object = new DataSourceIndexed(dataSource);
+            object = new DataSourceIndexed(dataSource); // eslint-disable-line no-native-reassign
         });
 
         describe('returns a value that', function() {

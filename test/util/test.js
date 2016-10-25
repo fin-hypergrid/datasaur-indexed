@@ -1,4 +1,5 @@
-/* global describe, it, beforeEach, afterEach, object */
+/* eslint-env commonjs, mocha */
+/* global object */
 
 var extend = require('fin-hypergrid-data-source-base').extend;
 
@@ -25,7 +26,6 @@ function constructorModule(pathname, extended, tearDown) {
         dflt = constructorModule.defaultPath,
         path = !matches ? dflt : matches[1] ? matches[2] : dflt + matches[2],
         name = !matches ? pathname : matches[3],
-        xxx = console.log(path, name),
         Constructor = require(path + name);
 
     _module(name, function() {

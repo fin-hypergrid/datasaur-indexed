@@ -23,8 +23,9 @@ git rm -rf -q .
 # gulp doc >/dev/null
 # cp -R ../../$repo/doc/* . >/dev/null
 
-# copy $repo/build to the cdn directory
-cp ../../$repo/build/* . >/dev/null
+# copy $repo/build to the cdn/build directory
+mkdir ./build
+cp ../../$repo/build/* ./build >/dev/null
 
 # send it up
 git add . >/dev/null
