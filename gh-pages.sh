@@ -2,11 +2,7 @@
 org="joneit"
 
 # set variable repo to current directory name (without path)
-folder=${PWD##*/}
-repo='datasaur-indexed'
-
-# make sure the docs are built
-gulp doc >/dev/null
+repo=${PWD##*/}
 
 # remove temp directory in case it already exists, remake it, switch to it
 rm -rf ../temp >/dev/null
@@ -15,7 +11,7 @@ pushd ../temp >/dev/null
 
 # clone it so it will be a branch of the repo
 git clone -q --single-branch http://github.com/$org/$repo.git
-cd folder >/dev/null
+cd $repo >/dev/null
 
 # create and switch to a new gh-pages branch
 git checkout -q --orphan gh-pages
@@ -24,10 +20,11 @@ git checkout -q --orphan gh-pages
 git rm -rf -q .
 
 # copy the doc directory from the workspace
-cp -R ../../$folder/doc/* . >/dev/null
+# gulp doc >/dev/null
+# cp -R ../../$repo/doc/* . >/dev/null
 
-# copy $folder/build to the cdn directory
-# cp ../../$folder/build/* . >/dev/null
+# copy $repo/build to the cdn directory
+cp ../../$repo/build/* . >/dev/null
 
 # send it up
 git add . >/dev/null
