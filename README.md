@@ -1,3 +1,1 @@
-# datasaur-indexed
-
-Indexed Datasaur module.
+Indexed record _Datasaur_ module

@@ -17,7 +17,6 @@ var DataSourceIndexed = Base.extend('DataSourceIndexed', {
      * @param dataSource
      */
     initialize: function(dataSource) {
-        this.dataSource = dataSource;
         this.index = [];
     },
 
