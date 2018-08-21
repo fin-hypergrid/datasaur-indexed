@@ -2,117 +2,138 @@
 
 'use strict';
 
-var Base = require('fin-hypergrid-data-source-base');
+var DatasaurBase = require('datasaur-base');
 
 /**
- * @param dataSource
  * @constructor
  */
-var DataSourceIndexed = Base.extend('DataSourceIndexed', {
+var DatasaurIndexed = DatasaurBase.extend('DatasaurIndexed', {
 
-    isNullObject: false,
-
-    /**
-     * @memberOf DataSourceIndexed#
-     * @param dataSource
-     */
-    initialize: function(dataSource) {
-        this.index = [];
-    },
+    version: '3.0.0',
 
     /**
-     * @memberOf DataSourceIndexed#
+     * @memberOf DatasaurIndexed#
      * @param y
      * @returns {*}
      */
     transposeY: function(y) {
-        return this.index.length ? this.index[y] : y;
+        return this.index ? this.index[y] : y;
     },
 
-    getDataIndex: function(y) {
-        return this.dataSource.getDataIndex(this.transposeY(y));
+    getRowIndex: function(y) {
+        return this.next.getRowIndex(this.transposeY(y));
     },
 
     /**
-     * @memberOf DataSourceIndexed#
+     * @memberOf DatasaurIndexed#
      * @param y
      * @returns {object}
      */
     getRow: function(y) {
-        return this.dataSource.getRow(this.transposeY(y));
+        return this.next.getRow(this.transposeY(y));
+    },
+
+    getRowMetadata: function(y, prototype) {
+        return this.next.getRowMetadata(this.transposeY(y), prototype);
+    },
+
+    setRowMetadata: function(y, metadata) {
+        return this.next.setRowMetadata(this.transposeY(y), metadata);
     },
 
     /**
-     * @memberOf DataSourceIndexed#
+     * @memberOf DatasaurIndexed#
      * @param x
      * @param y
      * @returns {*|Mixed}
      */
     getValue: function(x, y) {
-        return this.dataSource.getValue(x, this.transposeY(y));
+        return this.next.getValue(x, this.transposeY(y));
     },
 
     /**
-     * @memberOf DataSourceIndexed#
+     * @memberOf DatasaurIndexed#
      * @param {number} x
      * @param {number} y
      * @param {*} value
      */
     setValue: function(x, y, value) {
-        this.dataSource.setValue(x, this.transposeY(y), value);
+        this.next.setValue(x, this.transposeY(y), value);
     },
 
     /**
-     * @memberOf DataSourceIndexed#
+     * @memberOf DatasaurIndexed#
      * @returns {Number|*}
      */
     getRowCount: function() {
-        return this.index.length || this.dataSource.getRowCount();
+        return this.index ? this.index.length : this.next.getRowCount();
     },
 
     /**
-     * @memberOf DataSourceIndexed#
+     * @memberOf DatasaurIndexed#
+     * @param {number[]} [index]
+     * @returns {undefined|number[]}
+     */
+    setIndex(index) {
+        if (index === undefined) {
+            delete this.index;
+        } else {
+            this.dispatchEvent(DatasaurIndexed.preindexEventString);
+            this.index = index;
+            this.dispatchEvent(DatasaurIndexed.postindexEventString);
+        }
+        return index;
+    },
+
+    /**
+     * @memberOf DatasaurIndexed#
+     * @returns {undefined|number[]}
      */
     clearIndex: function() {
-        this.index.length = 0;
+        return this.setIndex(undefined);
     },
 
     /**
-     * @memberOf DataSourceIndexed#
-     * @param {filterPredicate} predicate
-     * @returns {number[]}
+     * @memberOf DatasaurIndexed#
+     * @param {filterPredicate} [predicate]
+     * @returns {undefined|number[]}
      */
     buildIndex: function(predicate) {
-        var rowCount = this.dataSource.getRowCount(),
-            index = this.index;
+        if (predicate) {
+            delete this.index; // free up memory before building a new index
 
-        this.clearIndex();
+            for (var y = 0, next = this.next, Y = next.getRowCount(), index = []; y < Y; y++) {
+                if (predicate.call(next, y)) {
+                    index.push(y);
+                }
+            }
 
-        for (var r = 0; r < rowCount; r++) {
-            if (!predicate || predicate.call(this, r, this.dataSource.getRow(r))) {
-                index.push(r);
+            if (index.length === Y) {
+                index = undefined;
             }
         }
 
-        return index;
+        return this.setIndex(index);
     }
 });
 
+DatasaurIndexed.preindexEventString = 'fin-hypergrid-data-prereindex';
+DatasaurIndexed.postindexEventString = 'fin-hypergrid-data-postreindex';
+
 /** @typedef {function} filterPredicate
  * @summary Applies filter to given row.
- * @this {DataSourceGlobalFilter}
- * @param {nubmer} r - Row index of row data within rows array `this.dataSource.data[]`.
- * @param {object} rowObject - Row data; element of `this.dataSource.data[]`.
+ * @this {Datasaur}
+ * @param {number} y - Index of row in data source (`this.datasaur`).
  * @returns {boolean} Row qualifies (passes through filter).
  */
 
 /**
- * Used by the sorters (`DataSourceSorter` and `DataSourceTreeviewSorter`).
+ * Used by the sorters, such as `DatasaurSorter`
  * @param {object} dataRow
  * @param {string} columnName
  * @returns {*}
  */
-DataSourceIndexed.valOrFunc = function(dataRow, columnName, calculator) {
+DatasaurIndexed.valOrFunc = function(dataRow, columnName, calculator) {
     var result;
     if (dataRow) {
         result = dataRow[columnName];
@@ -124,4 +145,4 @@ DataSourceIndexed.valOrFunc = function(dataRow, columnName, calculator) {
     return result;
 };
 
-module.exports = DataSourceIndexed;
+module.exports = DatasaurIndexed;

@@ -1,9 +1,10 @@
 {
   "name": "datasaur-indexed",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "Indexed record Datasaur module",
   "main": "index.js",
   "scripts": {
+    "inject-version": "sed -i '' -E 's/ +\"?version\"?:.*/'\"`grep '  \"version\": \"[0-9]' package.json`/\" index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,7 +18,6 @@
   },
   "homepage": "https://github.com/fin-hypergrid/datasaur-indexed#readme",
   "dependencies": {
-    "extend-me": "^2.3",
-    "fin-hypergrid-data-source-base": "^1.0.0"
+    "datasaur-base": "^3.0.0"
   }
 }
