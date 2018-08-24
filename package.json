@@ -4,7 +4,8 @@
   "description": "Indexed record Datasaur module",
   "main": "index.js",
   "scripts": {
-    "inject-version": "sed -i '' -E 's/ +\"?version\"?:.*/'\"`grep '  \"version\": \"[0-9]' package.json`/\" index.js",
+    "build": "npm run inject-version; echo '(function(require,module,exports){' >build/x; cat index.js >>build/x; echo '})(fin.Hypergrid.require,fin.module={exports:{}},fin.module.exports);\nfin.Hypergrid.modules[\"datasaur-indexed\"]=fin.module.exports;\ndelete fin.module;\n' >>build/x; uglifyjs build/x -cmo build/datasaur-indexed.min.js; mv build/x build/datasaur-indexed.js; ls -lahL build",
+    "inject-version": "sed -i '' \"s/DatasaurIndexed\\.version = .*/DatasaurIndexed.version = '\"`cat package.json | sed -En 's/.*\"([0-9]+\\.[0-9]+\\.[0-9]+)\".*/\\1/p'`\"';/\" index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

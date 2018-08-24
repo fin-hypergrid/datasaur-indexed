@@ -9,8 +9,6 @@ var DatasaurBase = require('datasaur-base');
  */
 var DatasaurIndexed = DatasaurBase.extend('DatasaurIndexed', {
 
-    version: '3.0.0',
-
     /**
      * @memberOf DatasaurIndexed#
      * @param y
@@ -74,7 +72,7 @@ var DatasaurIndexed = DatasaurBase.extend('DatasaurIndexed', {
      * @param {number[]} [index]
      * @returns {undefined|number[]}
      */
-    setIndex(index) {
+    setIndex: function(index) {
         if (index === undefined) {
             delete this.index;
         } else {
@@ -144,5 +142,7 @@ DatasaurIndexed.valOrFunc = function(dataRow, columnName, calculator) {
     }
     return result;
 };
+
+DatasaurIndexed.version = '3.0.0';
 
 module.exports = DatasaurIndexed;

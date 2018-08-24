@@ -13,11 +13,11 @@ The `datasaur-indexed` data source provides a means to map the original set of r
 
 ### Custom Properties
 
-`datasaur-indexed` introduces a custom `index` property and some helper methods described in the next section.
+`datasaur-indexed` defines a custom `index` instance property, a `version` static property, and some helper methods described in the next section.
 
-#### `index`
+#### `index` _(instance property)_
 
-The `index` property, when defined, is an integer array that maps the `y` value (row index provided to other method calls) to specific rows in the original set of rows.
+The `index` property _when defined_ is an integer array that maps the `y` value (row index provided to other method calls) to specific rows in the original set of rows.
 This property is all that is needed to effectively "index" (reorder, filter, and/or alias) the data.
 
 Given the following set of rows (shown here in JSON syntax):
@@ -50,7 +50,12 @@ dataModel.index = undefined
 While the above approach works, it is wholly inadequate, however, as a generalized solution for filtering and sorting.
 See [`buildIndex`](#dataModel-buildIndex-predicate) and [_Generalized sorting_](#generalized-sorting) below for better solutions.
 
+#### `version` _(static property)_
+The version string from package.json.
+(This is a static property of the constructor.)
+
 ### Custom methods
+`datasaur-indexed` defines four custom methods.
 #### `dataModel.setIndex(index)` _(instance method)_
 Using the `dataModel.setIndex([...])` method, rather than assigning directly to `dataModel.index`, will dispatch the pre- and post-index data events back to the applicaiton (see [_Event strings_](#event-strings) below).
 `dataModel.buildIndex` and `dataModel.sort` both call `dataModel.setIndex`.
@@ -82,7 +87,6 @@ function predicate(y) {
 }
 ```
 
-
 ### Event strings
 The event string definitions have the following defaults:
 ```js
@@ -106,3 +110,22 @@ See [`datasaur-filter`](simple-sort) which does something like that,
 but forces `Array.prototype.sort` to do a [stable sort](https://en.wikipedia.org/wiki/Category:Stable_sorts)
 (which is is not naturally inclined to do), and properly handles computed cells and columns.
 _Note: As of this writing `datasaur-filter` has not yet been updated to v3.0.0._
+
+### Distribution
+Published as an npm module to npmjs.org to be npm installed:
+```bash
+npm install datasaur-indexed
+```
+Published as a _Hypergrid Client Module_ to be loaded by the client with a `<script>` tag:
+```html
+<script src="https://fin-hypergrid.github.io/datasaur-indexed/3.0.0/build/datasaur-indexed.js"></script>
+```
+The above `<script>` tag loads the module into `fin.Hypergrid.modules['datasaur-indexed']`.
+Once loaded it can be referenced from another Hypergrid client module with `require(...)`:
+```js
+var DatasaurIndexed = require('datasaur-indexed');
+```
+Or from some other script with `fin.Hypergrid.require(...)`:
+```js
+var DatasaurIndexed = fin.Hypergrid.require('datasaur-indexed');
+```
